@@ -26,24 +26,23 @@ export function TransportModeFilter({ selected, onChange }: TransportModeFilterP
   };
 
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div className="flex gap-1.5 flex-wrap">
       {modes.map((mode) => {
         const isSelected = selected.includes(mode.id);
         const Icon = mode.icon;
-        
         return (
           <button
             key={mode.id}
             onClick={() => toggleMode(mode.id)}
             className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200",
+              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all duration-200",
               isSelected
                 ? mode.color
                 : "text-muted-foreground border-border/50 bg-secondary/50 hover:bg-secondary"
             )}
           >
-            <Icon className="w-4 h-4" />
-            <span className="text-sm font-medium">{mode.label}</span>
+            <Icon className="w-3.5 h-3.5" />
+            {mode.label}
           </button>
         );
       })}
