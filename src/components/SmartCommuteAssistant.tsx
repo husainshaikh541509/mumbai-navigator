@@ -1,5 +1,5 @@
 import { AlertTriangle, Clock, Lightbulb, Train, ArrowRightLeft, RefreshCw } from "lucide-react";
-import { GlassCard } from "./ui/glass-card";
+import { FlatCard } from "./ui/flat-card";
 import { cn } from "@/lib/utils";
 
 export type CrowdingLevel = "low" | "medium" | "high";
@@ -36,83 +36,68 @@ const MUMBAI_DELAYS: DelayAlert[] = [
     severity: "minor",
     lastUpdated: "3 min ago",
   },
-  {
-    id: "3",
-    line: "Metro Line 1 (Versova–Ghatkopar)",
-    message: "On time. Good option to skip Western Line congestion.",
-    delayMins: 0,
-    severity: "minor",
-    lastUpdated: "1 min ago",
-  },
 ];
 
 const MUMBAI_TIPS: CommuteTip[] = [
-  { id: "1", text: "Peak hours 8–10 AM & 6–8 PM: Board from origin or 2–3 stations before Dadar/Bandra for a seat.", icon: "crowd" },
-  { id: "2", text: "Ladies specials run on Western & Central; check timings if you prefer.", icon: "tip" },
-  { id: "3", text: "Platform 1 at Churchgate = slow, Platform 2–3 = fast. Reverse at Borivali.", icon: "platform" },
+  { id: "1", text: "Peak hours 8–10 AM & 6–8 PM: Board from origin for a seat.", icon: "crowd" },
+  { id: "2", text: "Platform 1 at Churchgate = slow, Platform 2–3 = fast.", icon: "platform" },
 ];
 
 const severityStyles = {
-  minor: "bg-warning/15 text-warning border-warning/30",
-  moderate: "bg-warning/20 text-warning border-warning/50",
-  major: "bg-destructive/20 text-destructive border-destructive/50",
+  minor: "border-warning/50 bg-warning/10",
+  moderate: "border-warning bg-warning/15",
+  major: "border-destructive bg-destructive/15",
 };
 
 export function SmartCommuteAssistant({ className }: { className?: string }) {
   const delayed = MUMBAI_DELAYS.filter((d) => (d.delayMins ?? 0) > 0);
-  const onTime = MUMBAI_DELAYS.filter((d) => (d.delayMins ?? 0) === 0);
 
   return (
-    <GlassCard className={cn("p-3", className)}>
+    <div className={cn("", className)}>
+      {/* Header */}
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-          <Train className="w-4 h-4 text-primary" />
-          Smart Commute Assistant
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+          <Train className="w-3.5 h-3.5 text-primary" />
+          Live Updates
         </h3>
         <span className="text-2xs text-muted-foreground flex items-center gap-1">
-          <RefreshCw className="w-3 h-3" /> Live
+          <div className="w-1.5 h-1.5 bg-success animate-pulse" />
+          Live
         </span>
       </div>
 
-      {/* Delays & alternatives */}
+      {/* Delays */}
       <div className="space-y-2 mb-3">
         {delayed.slice(0, 2).map((alert) => (
           <div
             key={alert.id}
             className={cn(
-              "rounded-lg border px-2.5 py-2",
+              "border p-2",
               severityStyles[alert.severity]
             )}
           >
             <div className="flex items-start gap-2">
-              <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-              <div>
-                <p className="text-xs font-medium leading-tight">{alert.line}</p>
-                {alert.delayMins != null && alert.delayMins > 0 && (
-                  <p className="text-2xs mt-0.5 flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> +{alert.delayMins} min
-                  </p>
-                )}
-                <p className="text-2xs mt-1 text-muted-foreground/90">{alert.message}</p>
-                <p className="text-2xs mt-1 opacity-70">Updated {alert.lastUpdated}</p>
+              <AlertTriangle className="w-3.5 h-3.5 text-warning mt-0.5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-medium text-foreground truncate">{alert.line}</p>
+                  {alert.delayMins != null && alert.delayMins > 0 && (
+                    <span className="text-2xs text-warning font-medium shrink-0">+{alert.delayMins}m</span>
+                  )}
+                </div>
+                <p className="text-2xs text-muted-foreground mt-0.5">{alert.message}</p>
               </div>
             </div>
           </div>
         ))}
-        {onTime.length > 0 && (
-          <div className="flex items-center gap-1.5 text-2xs text-muted-foreground">
-            <ArrowRightLeft className="w-3 h-3" />
-            <span>{onTime[0].line}: {onTime[0].message}</span>
-          </div>
-        )}
       </div>
 
-      {/* Mumbai tips */}
-      <div className="border-t border-border/50 pt-2">
+      {/* Tips */}
+      <div className="border-t border-border pt-2">
         <p className="text-2xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1">
-          <Lightbulb className="w-3 h-3" /> Mumbai local tips
+          <Lightbulb className="w-3 h-3" /> Tips
         </p>
-        <ul className="space-y-1">
+        <ul className="space-y-0.5">
           {MUMBAI_TIPS.map((tip) => (
             <li key={tip.id} className="text-2xs text-muted-foreground leading-snug">
               • {tip.text}
@@ -120,6 +105,6 @@ export function SmartCommuteAssistant({ className }: { className?: string }) {
           ))}
         </ul>
       </div>
-    </GlassCard>
+    </div>
   );
 }
