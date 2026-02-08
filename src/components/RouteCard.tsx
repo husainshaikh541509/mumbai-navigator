@@ -11,7 +11,6 @@ import {
   MapPin,
   RefreshCw,
 } from "lucide-react";
-import { GlassCard } from "./ui/glass-card";
 import { cn } from "@/lib/utils";
 import { TransportMode } from "./TransportModeFilter";
 
@@ -54,18 +53,18 @@ const modeIcons: Record<TransportMode, React.ElementType> = {
   walk: Footprints,
 };
 
-const modeColors: Record<TransportMode, string> = {
-  train: "bg-transport-train/20 text-transport-train",
-  metro: "bg-transport-metro/20 text-transport-metro",
-  bus: "bg-transport-bus/20 text-transport-bus",
-  cab: "bg-transport-cab/20 text-transport-cab",
-  walk: "bg-transport-walk/20 text-transport-walk",
+const modeLabels: Record<TransportMode, string> = {
+  train: "Train",
+  metro: "Metro",
+  bus: "Bus",
+  cab: "Cab",
+  walk: "Walk",
 };
 
 const crowdingLabel: Record<CrowdingLevel, string> = {
-  low: "Less crowded",
-  medium: "Moderate",
-  high: "Heavy",
+  low: "Low",
+  medium: "Mod",
+  high: "High",
 };
 
 const crowdingColor: Record<CrowdingLevel, string> = {
@@ -76,69 +75,62 @@ const crowdingColor: Record<CrowdingLevel, string> = {
 
 export function RouteCard({ route, onClick, className }: RouteCardProps) {
   return (
-    <GlassCard
-      variant="interactive"
+    <div
       onClick={onClick}
-      className={cn("p-3", className)}
+      className={cn(
+        "px-4 py-3 hover:bg-secondary/50 cursor-pointer transition-colors",
+        className
+      )}
     >
-      {/* Top row: times, delay badge, recommended */}
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-1.5">
-          <span className="text-base font-semibold text-foreground">
-            {route.departureTime}
-          </span>
+      {/* Top row: times and badges */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-base font-semibold text-foreground">{route.departureTime}</span>
           <span className="text-muted-foreground text-sm">→</span>
-          <span className="text-base font-semibold text-foreground">
-            {route.arrivalTime}
-          </span>
+          <span className="text-base font-semibold text-foreground">{route.arrivalTime}</span>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-2">
           {route.delay != null && route.delay > 0 && (
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-warning/20 text-warning text-2xs font-medium">
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-warning/20 text-warning text-2xs font-medium border border-warning/30">
               <AlertTriangle className="w-3 h-3" />
-              +{route.delay} min
+              +{route.delay}m
             </span>
           )}
           {route.recommended && (
-            <span className="px-1.5 py-0.5 rounded-md bg-primary/20 text-primary text-2xs font-medium">
-              Best
+            <span className="px-1.5 py-0.5 bg-primary/20 text-primary text-2xs font-medium border border-primary/30">
+              BEST
             </span>
           )}
         </div>
       </div>
 
-      {/* Transport chain: multiple icons + segment duration */}
+      {/* Transport segments */}
       <div className="flex items-center gap-1 flex-wrap mb-2">
         {route.segments.map((segment, index) => {
           const Icon = modeIcons[segment.mode];
           return (
             <div key={index} className="flex items-center gap-1">
-              <div
-                className={cn(
-                  "flex items-center gap-1 px-1.5 py-1 rounded-md",
-                  modeColors[segment.mode]
-                )}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span className="text-2xs font-medium">{segment.duration}</span>
+              <div className="flex items-center gap-1 px-1.5 py-1 bg-secondary border border-border">
+                <Icon className="w-3 h-3 text-muted-foreground" />
+                <span className="text-2xs text-foreground font-medium">{segment.duration}</span>
               </div>
               {index < route.segments.length - 1 && (
-                <span className="text-muted-foreground/60 text-xs">·</span>
+                <span className="text-muted-foreground/60 text-xs">›</span>
               )}
             </div>
           );
         })}
       </div>
 
-      {/* Footer: duration, cost, crowding, platform, last update */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-2 border-t border-border/50 text-2xs text-muted-foreground">
+      {/* Footer: meta info */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-2xs text-muted-foreground">
         <span className="flex items-center gap-1">
           <Clock className="w-3 h-3" />
           {route.totalDuration}
         </span>
         <span className="flex items-center gap-1">
           <IndianRupee className="w-3 h-3" />
-          {route.totalCost}
+          ₹{route.totalCost}
         </span>
         {route.crowding && (
           <span className={cn("flex items-center gap-1 font-medium", crowdingColor[route.crowding])}>
@@ -149,7 +141,7 @@ export function RouteCard({ route, onClick, className }: RouteCardProps) {
         {route.platform && (
           <span className="flex items-center gap-1">
             <MapPin className="w-3 h-3" />
-            P/F {route.platform}
+            P{route.platform}
           </span>
         )}
         {route.lastUpdateTime && (
@@ -159,6 +151,6 @@ export function RouteCard({ route, onClick, className }: RouteCardProps) {
           </span>
         )}
       </div>
-    </GlassCard>
+    </div>
   );
 }

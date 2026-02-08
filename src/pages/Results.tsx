@@ -1,7 +1,6 @@
-import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SlidersHorizontal, MapPin } from "lucide-react";
-import { GlassCard } from "@/components/ui/glass-card";
+import { FlatCard } from "@/components/ui/flat-card";
 import { RouteCard, Route } from "@/components/RouteCard";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -75,70 +74,59 @@ export default function Results() {
   const to = searchParams.get("to") || "Andheri";
 
   return (
-    <div className="min-h-screen gradient-mesh pb-20">
-      <motion.div
-        initial={{ y: -10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="px-4 pt-10 pb-2"
-      >
-        <div className="flex items-center gap-3 mb-4">
+    <div className="min-h-screen bg-background pb-16">
+      {/* Header */}
+      <div className="border-b border-border px-4 py-3">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-xl bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-secondary transition-colors"
+            className="p-2 border border-border hover:bg-secondary transition-colors"
           >
             <ArrowLeft className="w-4 h-4 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-bold text-foreground truncate">Route options</h1>
+            <h1 className="text-base font-semibold text-foreground">Route Options</h1>
             <p className="text-xs text-muted-foreground truncate">{from} → {to}</p>
           </div>
-          <button className="w-9 h-9 rounded-xl bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-secondary transition-colors shrink-0">
+          <button className="p-2 border border-border hover:bg-secondary transition-colors">
             <SlidersHorizontal className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
+      </div>
 
-        <GlassCard className="p-3 mb-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-2.5 h-2.5 rounded-full bg-primary shrink-0" />
-              <div className="min-w-0">
-                <p className="font-semibold text-sm text-foreground truncate">{from}</p>
-                <p className="text-2xs text-muted-foreground">From</p>
-              </div>
+      {/* Journey Summary */}
+      <div className="px-4 py-3 border-b border-border">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-success" />
+              <span className="text-sm font-medium text-foreground">{from}</span>
             </div>
-            <div className="flex-1 mx-2 min-w-0">
-              <div className="h-px bg-border relative">
-                <span className="absolute left-1/2 -translate-x-1/2 -top-1.5 px-1.5 py-0.5 rounded bg-secondary text-2xs text-muted-foreground">
-                  ~45 min
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="text-right min-w-0">
-                <p className="font-semibold text-sm text-foreground truncate">{to}</p>
-                <p className="text-2xs text-muted-foreground">To</p>
-              </div>
-              <MapPin className="w-4 h-4 text-accent shrink-0" />
+            <span className="text-muted-foreground">—</span>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-destructive" />
+              <span className="text-sm font-medium text-foreground">{to}</span>
             </div>
           </div>
-        </GlassCard>
+          <span className="text-xs text-muted-foreground px-2 py-1 bg-secondary border border-border">
+            ~45 min
+          </span>
+        </div>
+      </div>
 
-        <p className="text-2xs text-muted-foreground">{mockRoutes.length} routes</p>
-      </motion.div>
+      {/* Results count */}
+      <div className="px-4 py-2 border-b border-border bg-secondary/30">
+        <p className="text-xs text-muted-foreground">{mockRoutes.length} routes found</p>
+      </div>
 
-      <div className="px-4 space-y-3">
-        {mockRoutes.map((route, index) => (
-          <motion.div
+      {/* Route List */}
+      <div className="divide-y divide-border">
+        {mockRoutes.map((route) => (
+          <RouteCard
             key={route.id}
-            initial={{ y: 12, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.05 + index * 0.05 }}
-          >
-            <RouteCard
-              route={route}
-              onClick={() => navigate(`/details/${route.id}`)}
-            />
-          </motion.div>
+            route={route}
+            onClick={() => navigate(`/details/${route.id}`)}
+          />
         ))}
       </div>
 

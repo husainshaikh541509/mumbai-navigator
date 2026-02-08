@@ -8,12 +8,12 @@ interface TransportModeFilterProps {
   onChange: (modes: TransportMode[]) => void;
 }
 
-const modes: { id: TransportMode; label: string; icon: React.ElementType; color: string }[] = [
-  { id: "train", label: "Train", icon: Train, color: "text-transport-train border-transport-train/50 bg-transport-train/10" },
-  { id: "metro", label: "Metro", icon: TrainFront, color: "text-transport-metro border-transport-metro/50 bg-transport-metro/10" },
-  { id: "bus", label: "Bus", icon: Bus, color: "text-transport-bus border-transport-bus/50 bg-transport-bus/10" },
-  { id: "cab", label: "Cab", icon: Car, color: "text-transport-cab border-transport-cab/50 bg-transport-cab/10" },
-  { id: "walk", label: "Walk", icon: Footprints, color: "text-transport-walk border-transport-walk/50 bg-transport-walk/10" },
+const modes: { id: TransportMode; label: string; icon: React.ElementType }[] = [
+  { id: "train", label: "Train", icon: Train },
+  { id: "metro", label: "Metro", icon: TrainFront },
+  { id: "bus", label: "Bus", icon: Bus },
+  { id: "cab", label: "Cab", icon: Car },
+  { id: "walk", label: "Walk", icon: Footprints },
 ];
 
 export function TransportModeFilter({ selected, onChange }: TransportModeFilterProps) {
@@ -26,7 +26,7 @@ export function TransportModeFilter({ selected, onChange }: TransportModeFilterP
   };
 
   return (
-    <div className="flex gap-1.5 flex-wrap">
+    <div className="flex gap-1 flex-wrap">
       {modes.map((mode) => {
         const isSelected = selected.includes(mode.id);
         const Icon = mode.icon;
@@ -35,10 +35,10 @@ export function TransportModeFilter({ selected, onChange }: TransportModeFilterP
             key={mode.id}
             onClick={() => toggleMode(mode.id)}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all duration-200",
+              "flex items-center gap-1.5 px-2.5 py-1.5 border text-xs font-medium transition-colors",
               isSelected
-                ? mode.color
-                : "text-muted-foreground border-border/50 bg-secondary/50 hover:bg-secondary"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border bg-secondary text-muted-foreground hover:text-foreground hover:border-muted-foreground"
             )}
           >
             <Icon className="w-3.5 h-3.5" />

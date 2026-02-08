@@ -1,7 +1,6 @@
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, RefreshCw, AlertTriangle, CheckCircle, Clock, Train, TrainFront, Bus } from "lucide-react";
-import { GlassCard } from "@/components/ui/glass-card";
+import { FlatCard } from "@/components/ui/flat-card";
 import { BottomNav } from "@/components/BottomNav";
 
 const liveStatus = [
@@ -12,8 +11,6 @@ const liveStatus = [
     status: "on-time",
     message: "Running on schedule",
     lastUpdated: "2 min ago",
-    color: "text-success",
-    bgColor: "bg-success/10",
   },
   {
     id: "2",
@@ -22,8 +19,6 @@ const liveStatus = [
     status: "delayed",
     message: "5-10 min delays due to signal issues",
     lastUpdated: "5 min ago",
-    color: "text-warning",
-    bgColor: "bg-warning/10",
   },
   {
     id: "3",
@@ -32,8 +27,6 @@ const liveStatus = [
     status: "on-time",
     message: "Running on schedule",
     lastUpdated: "1 min ago",
-    color: "text-success",
-    bgColor: "bg-success/10",
   },
   {
     id: "4",
@@ -42,8 +35,6 @@ const liveStatus = [
     status: "disrupted",
     message: "Major delays on Route 123, 456",
     lastUpdated: "10 min ago",
-    color: "text-destructive",
-    bgColor: "bg-destructive/10",
   },
   {
     id: "5",
@@ -52,97 +43,105 @@ const liveStatus = [
     status: "on-time",
     message: "Running on schedule",
     lastUpdated: "3 min ago",
-    color: "text-success",
-    bgColor: "bg-success/10",
   },
 ];
 
 export default function LiveStatus() {
   const navigate = useNavigate();
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIndicator = (status: string) => {
     switch (status) {
       case "on-time":
-        return <CheckCircle className="w-5 h-5 text-success" />;
+        return <div className="w-2 h-2 bg-success" />;
       case "delayed":
-        return <Clock className="w-5 h-5 text-warning" />;
+        return <div className="w-2 h-2 bg-warning" />;
       case "disrupted":
-        return <AlertTriangle className="w-5 h-5 text-destructive" />;
+        return <div className="w-2 h-2 bg-destructive" />;
       default:
         return null;
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "on-time":
+        return <CheckCircle className="w-4 h-4 text-success" />;
+      case "delayed":
+        return <Clock className="w-4 h-4 text-warning" />;
+      case "disrupted":
+        return <AlertTriangle className="w-4 h-4 text-destructive" />;
+      default:
+        return null;
+    }
+  };
+
+  const onTimeCount = liveStatus.filter(s => s.status === "on-time").length;
+  const delayedCount = liveStatus.filter(s => s.status === "delayed").length;
+  const disruptedCount = liveStatus.filter(s => s.status === "disrupted").length;
+
   return (
-    <div className="min-h-screen gradient-mesh pb-20">
+    <div className="min-h-screen bg-background pb-16">
       {/* Header */}
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="px-4 pt-12 pb-4"
-      >
-        <div className="flex items-center gap-4 mb-6">
+      <div className="border-b border-border px-4 py-3">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="w-10 h-10 rounded-xl bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-secondary transition-colors"
+            className="p-2 border border-border hover:bg-secondary transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-foreground" />
+            <ArrowLeft className="w-4 h-4 text-foreground" />
           </button>
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-foreground">Live Status</h1>
-            <p className="text-sm text-muted-foreground">Real-time transit updates</p>
+            <h1 className="text-base font-semibold text-foreground">Live Status</h1>
+            <p className="text-xs text-muted-foreground">Real-time transit updates</p>
           </div>
-          <button className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center hover:bg-primary/20 transition-colors">
-            <RefreshCw className="w-5 h-5 text-primary" />
+          <button className="p-2 border border-primary text-primary hover:bg-primary/10 transition-colors">
+            <RefreshCw className="w-4 h-4" />
           </button>
         </div>
+      </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <GlassCard className="p-3 text-center">
-            <p className="text-2xl font-bold text-success">3</p>
-            <p className="text-xs text-muted-foreground">On Time</p>
-          </GlassCard>
-          <GlassCard className="p-3 text-center">
-            <p className="text-2xl font-bold text-warning">1</p>
-            <p className="text-xs text-muted-foreground">Delayed</p>
-          </GlassCard>
-          <GlassCard className="p-3 text-center">
-            <p className="text-2xl font-bold text-destructive">1</p>
-            <p className="text-xs text-muted-foreground">Disrupted</p>
-          </GlassCard>
+      {/* Summary Stats */}
+      <div className="grid grid-cols-3 gap-px bg-border border-b border-border">
+        <div className="bg-background p-4 text-center">
+          <p className="text-xl font-bold text-success">{onTimeCount}</p>
+          <p className="text-xs text-muted-foreground">On Time</p>
         </div>
-      </motion.div>
+        <div className="bg-background p-4 text-center">
+          <p className="text-xl font-bold text-warning">{delayedCount}</p>
+          <p className="text-xs text-muted-foreground">Delayed</p>
+        </div>
+        <div className="bg-background p-4 text-center">
+          <p className="text-xl font-bold text-destructive">{disruptedCount}</p>
+          <p className="text-xs text-muted-foreground">Disrupted</p>
+        </div>
+      </div>
 
       {/* Status List */}
-      <div className="px-4 space-y-4">
-        {liveStatus.map((item, index) => {
+      <div className="divide-y divide-border">
+        {liveStatus.map((item) => {
           const Icon = item.icon;
           return (
-            <motion.div
+            <div
               key={item.id}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 + index * 0.05 }}
+              className="px-4 py-3 hover:bg-secondary/50 transition-colors cursor-pointer"
             >
-              <GlassCard variant="interactive" className="p-4">
-                <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-xl ${item.bgColor} flex items-center justify-center`}>
-                    <Icon className={`w-6 h-6 ${item.color}`} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-semibold text-foreground">{item.line}</h3>
-                      {getStatusIcon(item.status)}
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{item.message}</p>
-                    <p className="text-xs text-muted-foreground/60">
-                      Updated {item.lastUpdated}
-                    </p>
-                  </div>
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-secondary border border-border">
+                  <Icon className="w-5 h-5 text-muted-foreground" />
                 </div>
-              </GlassCard>
-            </motion.div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      {getStatusIndicator(item.status)}
+                      <h3 className="text-sm font-medium text-foreground">{item.line}</h3>
+                    </div>
+                    {getStatusIcon(item.status)}
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-1">{item.message}</p>
+                  <p className="text-2xs text-muted-foreground/70">Updated {item.lastUpdated}</p>
+                </div>
+              </div>
+            </div>
           );
         })}
       </div>
